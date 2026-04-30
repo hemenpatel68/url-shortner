@@ -7,6 +7,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 
 const shortUrlBase = process.env.NEXT_PUBLIC_SHORT_URL_BASE;
+console.log(shortUrlBase);
 
 export const Home = () => {
   const [authMode, setAuthMode] = useState<AuthMode>("login");
