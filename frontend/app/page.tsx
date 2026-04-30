@@ -6,8 +6,7 @@ import { apiRequest, apiBase } from "@/utils/apiRequest";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 
-const shortUrlBase =
-  process.env.NEXT_PUBLIC_SHORT_URL_BASE ?? "http://localhost:8000";
+const shortUrlBase = process.env.NEXT_PUBLIC_SHORT_URL_BASE;
 
 export const Home = () => {
   const [authMode, setAuthMode] = useState<AuthMode>("login");
