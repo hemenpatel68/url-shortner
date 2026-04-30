@@ -6,8 +6,35 @@ import { apiRequest, apiBase } from "@/utils/apiRequest";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 
-const shortUrlBase = process.env.NEXT_PUBLIC_SHORT_URL_BASE;
-console.log(shortUrlBase);
+const getShortUrlBase = () => {
+  const envBase = process.env.NEXT_PUBLIC_SHORT_URL_BASE;
+
+  // Ensure we have a valid absolute URL
+  if (
+    envBase &&
+    (envBase.startsWith("http://") || envBase.startsWith("https://"))
+  ) {
+    return envBase;
+  }
+
+  // Fallback: use the API base without the trailing /api if available
+  if (
+    apiBase &&
+    (apiBase.startsWith("http://") || apiBase.startsWith("https://"))
+  ) {
+    return apiBase.replace(/\/api\/?$/, "");
+  }
+
+  // Last resort: use current origin (frontend domain)
+  if (typeof window !== "undefined") {
+    return window.location.origin;
+  }
+
+  return "";
+};
+
+const shortUrlBase = getShortUrlBase();
+console.log("Short URL Base:", shortUrlBase);
 
 export const Home = () => {
   const [authMode, setAuthMode] = useState<AuthMode>("login");
