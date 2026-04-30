@@ -1,7 +1,15 @@
 import "dotenv/config";
 import { drizzle } from "drizzle-orm/node-postgres";
 
-if (!process.env.POSTGRES_URL) {
+const missingDatabaseConnection = () => {
   throw new Error("POSTGRES_URL is missing");
-}
-export const db = drizzle(process.env.POSTGRES_URL);
+};
+
+export const db = process.env.POSTGRES_URL
+  ? drizzle(process.env.POSTGRES_URL)
+  : new Proxy(
+      {},
+      {
+        get: missingDatabaseConnection,
+      },
+    );
