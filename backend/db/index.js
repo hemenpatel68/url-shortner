@@ -9,17 +9,20 @@ const missingDatabaseConnection = () => {
 const getConnectionString = () => {
   const connectionUrl = new URL(process.env.POSTGRES_URL);
 
-  connectionUrl.searchParams.delete("sslmode");
-  connectionUrl.searchParams.delete("sslcert");
-  connectionUrl.searchParams.delete("sslkey");
-  connectionUrl.searchParams.delete("sslrootcert");
+  for (const key of [...connectionUrl.searchParams.keys()]) {
+    if (key.toLowerCase().startsWith("ssl")) {
+      connectionUrl.searchParams.delete(key);
+    }
+  }
 
   return connectionUrl.toString();
 };
 
 const createDatabaseClient = () => {
+  const connectionString = getConnectionString();
+
   const pool = new pg.Pool({
-    connectionString: getConnectionString(),
+    connectionString,
     ssl: { rejectUnauthorized: false },
   });
 
