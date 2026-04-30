@@ -6,13 +6,21 @@ const missingDatabaseConnection = () => {
   throw new Error("POSTGRES_URL is missing");
 };
 
+const getConnectionString = () => {
+  const connectionUrl = new URL(process.env.POSTGRES_URL);
+
+  connectionUrl.searchParams.delete("sslmode");
+  connectionUrl.searchParams.delete("sslcert");
+  connectionUrl.searchParams.delete("sslkey");
+  connectionUrl.searchParams.delete("sslrootcert");
+
+  return connectionUrl.toString();
+};
+
 const createDatabaseClient = () => {
   const pool = new pg.Pool({
-    connectionString: process.env.POSTGRES_URL,
-    ssl:
-      process.env.NODE_ENV === "production"
-        ? { rejectUnauthorized: false }
-        : undefined,
+    connectionString: getConnectionString(),
+    ssl: { rejectUnauthorized: false },
   });
 
   return drizzle(pool);
