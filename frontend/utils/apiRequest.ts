@@ -1,6 +1,6 @@
 import { ApiError } from "@/types/type";
 
-export const apiBase = "/api/backend";
+export const apiBase = process.env.NEXT_PUBLIC_API_BASE;
 
 export const apiRequest = async <T>(
   path: string,
