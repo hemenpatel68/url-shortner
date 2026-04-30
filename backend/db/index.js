@@ -6,25 +6,21 @@ const missingDatabaseConnection = () => {
   throw new Error("POSTGRES_URL is missing");
 };
 
-const getConnectionString = () => {
+const getDatabaseConfig = () => {
   const connectionUrl = new URL(process.env.POSTGRES_URL);
 
-  for (const key of [...connectionUrl.searchParams.keys()]) {
-    if (key.toLowerCase().startsWith("ssl")) {
-      connectionUrl.searchParams.delete(key);
-    }
-  }
-
-  return connectionUrl.toString();
+  return {
+    host: connectionUrl.hostname,
+    port: connectionUrl.port ? Number(connectionUrl.port) : 5432,
+    database: connectionUrl.pathname.slice(1),
+    user: decodeURIComponent(connectionUrl.username),
+    password: decodeURIComponent(connectionUrl.password),
+    ssl: { rejectUnauthorized: false },
+  };
 };
 
 const createDatabaseClient = () => {
-  const connectionString = getConnectionString();
-
-  const pool = new pg.Pool({
-    connectionString,
-    ssl: { rejectUnauthorized: false },
-  });
+  const pool = new pg.Pool(getDatabaseConfig());
 
   return drizzle(pool);
 };
