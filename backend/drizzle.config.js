@@ -6,6 +6,6 @@ export default defineConfig({
   schema: "./models/index.js",
   dialect: "postgresql",
   dbCredentials: {
-    url: process.env.DATABASE_URL,
+    url: process.env.POSTGRES_URL,
   },
 });
