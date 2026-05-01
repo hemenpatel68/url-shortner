@@ -1,6 +1,7 @@
 "use client";
 
 import { EmptyState } from "@/components/EmptyState";
+import ThemeToggle from "@/components/ToggleButton";
 import { AuthMode, ShortUrl } from "@/types/type";
 import { apiRequest, apiBase } from "@/utils/apiRequest";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -232,41 +233,44 @@ export const Home = () => {
   };
 
   return (
-    <main className="min-h-screen bg-[#f6f8fb] text-slate-950">
-      <section className="border-b border-slate-200 bg-white">
+    <main className="min-h-screen bg-[#f6f8fb] text-slate-950 dark:bg-slate-950 dark:text-slate-50">
+      <section className="border-b border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
         <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-5 py-6 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-cyan-700">
+            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-cyan-700 dark:text-cyan-300">
               URL Shortner
             </p>
-            <h1 className="mt-2 text-3xl font-bold tracking-normal text-slate-950 sm:text-4xl">
+            <h1 className="mt-2 text-3xl font-bold tracking-normal text-slate-950 dark:text-white sm:text-4xl">
               Build, manage, and share short links.
             </h1>
           </div>
 
-          {isAuthenticated ? (
-            <button
-              className="h-11 w-full rounded-md border border-slate-300 px-4 text-sm font-semibold text-slate-700 transition hover:border-slate-400 hover:bg-slate-50 sm:w-auto"
-              onClick={logout}
-              type="button"
-            >
-              Logout
-            </button>
-          ) : null}
+          <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:items-center">
+            <ThemeToggle />
+            {isAuthenticated ? (
+              <button
+                className="h-11 w-full rounded-md border border-slate-300 px-4 text-sm font-semibold text-slate-700 transition hover:border-slate-400 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-200 dark:hover:border-slate-500 dark:hover:bg-slate-800 sm:w-auto"
+                onClick={logout}
+                type="button"
+              >
+                Logout
+              </button>
+            ) : null}
+          </div>
         </div>
       </section>
 
       <section className="mx-auto grid w-full max-w-6xl gap-5 px-5 py-6 lg:grid-cols-[360px_1fr]">
-        <aside className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
+        <aside className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
           {!isAuthenticated ? (
             <>
-              <div className="mb-5 flex rounded-md bg-slate-100 p-1">
+              <div className="mb-5 flex rounded-md bg-slate-100 p-1 dark:bg-slate-800">
                 {(["login", "signup"] as const).map((mode) => (
                   <button
                     className={`h-10 flex-1 rounded-md text-sm font-semibold transition ${
                       authMode === mode
-                        ? "bg-white text-slate-950 shadow-sm"
-                        : "text-slate-500 hover:text-slate-800"
+                        ? "bg-white text-slate-950 shadow-sm dark:bg-slate-950 dark:text-white"
+                        : "text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-100"
                     }`}
                     key={mode}
                     onClick={() => {
@@ -282,11 +286,11 @@ export const Home = () => {
               <form className="space-y-4" onSubmit={handleAuth}>
                 {authMode === "signup" ? (
                   <label className="block">
-                    <span className="text-sm font-medium text-slate-700">
+                    <span className="text-sm font-medium text-slate-700 dark:text-slate-200">
                       Name
                     </span>
                     <input
-                      className="mt-2 h-11 w-full rounded-md border border-slate-300 bg-white px-3 text-sm outline-none transition focus:border-cyan-600 focus:ring-4 focus:ring-cyan-100"
+                      className="mt-2 h-11 w-full rounded-md border border-slate-300 bg-white px-3 text-sm outline-none transition focus:border-cyan-600 focus:ring-4 focus:ring-cyan-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-50 dark:placeholder:text-slate-500 dark:focus:border-cyan-400 dark:focus:ring-cyan-950"
                       minLength={3}
                       onChange={(event) => setName(event.target.value)}
                       placeholder="Hemen Patel"
@@ -297,11 +301,11 @@ export const Home = () => {
                 ) : null}
 
                 <label className="block">
-                  <span className="text-sm font-medium text-slate-700">
+                  <span className="text-sm font-medium text-slate-700 dark:text-slate-200">
                     Email
                   </span>
                   <input
-                    className="mt-2 h-11 w-full rounded-md border border-slate-300 bg-white px-3 text-sm outline-none transition focus:border-cyan-600 focus:ring-4 focus:ring-cyan-100"
+                    className="mt-2 h-11 w-full rounded-md border border-slate-300 bg-white px-3 text-sm outline-none transition focus:border-cyan-600 focus:ring-4 focus:ring-cyan-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-50 dark:placeholder:text-slate-500 dark:focus:border-cyan-400 dark:focus:ring-cyan-950"
                     onChange={(event) => setEmail(event.target.value)}
                     placeholder="you@example.com"
                     required
@@ -311,11 +315,11 @@ export const Home = () => {
                 </label>
 
                 <label className="block">
-                  <span className="text-sm font-medium text-slate-700">
+                  <span className="text-sm font-medium text-slate-700 dark:text-slate-200">
                     Password
                   </span>
                   <input
-                    className="mt-2 h-11 w-full rounded-md border border-slate-300 bg-white px-3 text-sm outline-none transition focus:border-cyan-600 focus:ring-4 focus:ring-cyan-100"
+                    className="mt-2 h-11 w-full rounded-md border border-slate-300 bg-white px-3 text-sm outline-none transition focus:border-cyan-600 focus:ring-4 focus:ring-cyan-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-50 dark:placeholder:text-slate-500 dark:focus:border-cyan-400 dark:focus:ring-cyan-950"
                     minLength={3}
                     onChange={(event) => setPassword(event.target.value)}
                     placeholder="Minimum 3 characters"
@@ -341,20 +345,20 @@ export const Home = () => {
           ) : (
             <form className="space-y-4" onSubmit={handleCreate}>
               <div>
-                <h2 className="text-lg font-bold text-slate-950">
+                <h2 className="text-lg font-bold text-slate-950 dark:text-white">
                   Shorten a link
                 </h2>
-                <p className="mt-1 text-sm leading-6 text-slate-500">
+                <p className="mt-1 text-sm leading-6 text-slate-500 dark:text-slate-400">
                   Paste a full URL and optionally choose your own short code.
                 </p>
               </div>
 
               <label className="block">
-                <span className="text-sm font-medium text-slate-700">
+                <span className="text-sm font-medium text-slate-700 dark:text-slate-200">
                   Destination URL
                 </span>
                 <input
-                  className="mt-2 h-11 w-full rounded-md border border-slate-300 bg-white px-3 text-sm outline-none transition focus:border-cyan-600 focus:ring-4 focus:ring-cyan-100"
+                  className="mt-2 h-11 w-full rounded-md border border-slate-300 bg-white px-3 text-sm outline-none transition focus:border-cyan-600 focus:ring-4 focus:ring-cyan-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-50 dark:placeholder:text-slate-500 dark:focus:border-cyan-400 dark:focus:ring-cyan-950"
                   onChange={(event) => setTargetUrl(event.target.value)}
                   placeholder="https://example.com/article"
                   required
@@ -364,11 +368,11 @@ export const Home = () => {
               </label>
 
               <label className="block">
-                <span className="text-sm font-medium text-slate-700">
+                <span className="text-sm font-medium text-slate-700 dark:text-slate-200">
                   Custom code
                 </span>
                 <input
-                  className="mt-2 h-11 w-full rounded-md border border-slate-300 bg-white px-3 text-sm outline-none transition focus:border-cyan-600 focus:ring-4 focus:ring-cyan-100"
+                  className="mt-2 h-11 w-full rounded-md border border-slate-300 bg-white px-3 text-sm outline-none transition focus:border-cyan-600 focus:ring-4 focus:ring-cyan-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-50 dark:placeholder:text-slate-500 dark:focus:border-cyan-400 dark:focus:ring-cyan-950"
                   maxLength={155}
                   onChange={(event) => setCustomCode(event.target.value)}
                   placeholder="launch"
@@ -387,11 +391,11 @@ export const Home = () => {
           )}
         </aside>
 
-        <section className="rounded-lg border border-slate-200 bg-white shadow-sm">
-          <div className="flex flex-col gap-3 border-b border-slate-200 p-5 sm:flex-row sm:items-center sm:justify-between">
+        <section className="rounded-lg border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
+          <div className="flex flex-col gap-3 border-b border-slate-200 p-5 dark:border-slate-800 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <h2 className="text-xl font-bold text-slate-950">Your links</h2>
-              <p className="mt-1 text-sm text-slate-500">
+              <h2 className="text-xl font-bold text-slate-950 dark:text-white">Your links</h2>
+              <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
                 {isAuthenticated
                   ? `${shortUrls.length} saved short link${
                       shortUrls.length === 1 ? "" : "s"
@@ -402,7 +406,7 @@ export const Home = () => {
 
             {isAuthenticated ? (
               <button
-                className="h-10 rounded-md border border-slate-300 px-3 text-sm font-semibold text-slate-700 transition hover:border-slate-400 hover:bg-slate-50"
+                className="h-10 rounded-md border border-slate-300 px-3 text-sm font-semibold text-slate-700 transition hover:border-slate-400 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-200 dark:hover:border-slate-500 dark:hover:bg-slate-800"
                 onClick={() => void loadShortUrls()}
                 type="button"
               >
@@ -411,7 +415,7 @@ export const Home = () => {
             ) : null}
           </div>
 
-          <div className="divide-y divide-slate-200">
+          <div className="divide-y divide-slate-200 dark:divide-slate-800">
             {!isAuthenticated ? (
               <EmptyState title="No session yet" />
             ) : sortedUrls.length === 0 ? (
@@ -426,28 +430,28 @@ export const Home = () => {
                     <div className="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
                       <div className="min-w-0 flex-1">
                         <a
-                          className="break-all text-base font-bold text-cyan-700 hover:text-cyan-900"
+                          className="break-all text-base font-bold text-cyan-700 hover:text-cyan-900 dark:text-cyan-300 dark:hover:text-cyan-200"
                           href={shortLink}
                           rel="noreferrer"
                           target="_blank"
                         >
                           {shortLink}
                         </a>
-                        <p className="mt-2 break-all text-sm leading-6 text-slate-500">
+                        <p className="mt-2 break-all text-sm leading-6 text-slate-500 dark:text-slate-400">
                           {url.targetURL}
                         </p>
                       </div>
 
                       <div className="flex flex-wrap gap-2">
                         <button
-                          className="h-10 rounded-md border border-slate-300 px-3 text-sm font-semibold text-slate-700 transition hover:border-slate-400 hover:bg-slate-50"
+                          className="h-10 rounded-md border border-slate-300 px-3 text-sm font-semibold text-slate-700 transition hover:border-slate-400 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-200 dark:hover:border-slate-500 dark:hover:bg-slate-800"
                           onClick={() => void copyLink(url.shortCode)}
                           type="button"
                         >
                           {copiedCode === url.shortCode ? "Copied" : "Copy"}
                         </button>
                         <button
-                          className="h-10 rounded-md border border-slate-300 px-3 text-sm font-semibold text-slate-700 transition hover:border-slate-400 hover:bg-slate-50"
+                          className="h-10 rounded-md border border-slate-300 px-3 text-sm font-semibold text-slate-700 transition hover:border-slate-400 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-200 dark:hover:border-slate-500 dark:hover:bg-slate-800"
                           onClick={() => {
                             setEditingId(isEditing ? null : url.id);
                             setEditUrl(url.targetURL);
@@ -458,7 +462,7 @@ export const Home = () => {
                           {isEditing ? "Cancel" : "Edit"}
                         </button>
                         <button
-                          className="h-10 rounded-md border border-red-200 px-3 text-sm font-semibold text-red-700 transition hover:bg-red-50 disabled:cursor-not-allowed disabled:text-slate-400"
+                          className="h-10 rounded-md border border-red-200 px-3 text-sm font-semibold text-red-700 transition hover:bg-red-50 disabled:cursor-not-allowed disabled:text-slate-400 dark:border-red-900/70 dark:text-red-300 dark:hover:bg-red-950/40"
                           disabled={isLoading}
                           onClick={() => void handleDelete(url.id)}
                           type="button"
@@ -469,21 +473,21 @@ export const Home = () => {
                     </div>
 
                     {isEditing ? (
-                      <div className="mt-4 grid gap-3 rounded-md bg-slate-50 p-4 md:grid-cols-[1fr_180px_auto]">
+                      <div className="mt-4 grid gap-3 rounded-md bg-slate-50 p-4 dark:bg-slate-800/70 md:grid-cols-[1fr_180px_auto]">
                         <input
-                          className="h-10 rounded-md border border-slate-300 bg-white px-3 text-sm outline-none transition focus:border-cyan-600 focus:ring-4 focus:ring-cyan-100"
+                          className="h-10 rounded-md border border-slate-300 bg-white px-3 text-sm outline-none transition focus:border-cyan-600 focus:ring-4 focus:ring-cyan-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-50 dark:focus:border-cyan-400 dark:focus:ring-cyan-950"
                           onChange={(event) => setEditUrl(event.target.value)}
                           type="url"
                           value={editUrl}
                         />
                         <input
-                          className="h-10 rounded-md border border-slate-300 bg-white px-3 text-sm outline-none transition focus:border-cyan-600 focus:ring-4 focus:ring-cyan-100"
+                          className="h-10 rounded-md border border-slate-300 bg-white px-3 text-sm outline-none transition focus:border-cyan-600 focus:ring-4 focus:ring-cyan-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-50 dark:focus:border-cyan-400 dark:focus:ring-cyan-950"
                           maxLength={155}
                           onChange={(event) => setEditCode(event.target.value)}
                           value={editCode}
                         />
                         <button
-                          className="h-10 rounded-md bg-slate-950 px-4 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-300"
+                          className="h-10 rounded-md bg-slate-950 px-4 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-300 dark:bg-slate-100 dark:text-slate-950 dark:hover:bg-white dark:disabled:bg-slate-700 dark:disabled:text-slate-400"
                           disabled={isLoading}
                           onClick={() => void handleUpdate(url.id)}
                           type="button"
