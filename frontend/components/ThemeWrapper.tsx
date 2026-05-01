@@ -2,6 +2,7 @@
 
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
+import { useEffect } from "react";
 
 export default function ThemeWrapper({
   children,
@@ -10,5 +11,15 @@ export default function ThemeWrapper({
 }) {
   const theme = useSelector((state: RootState) => state.theme.mode);
 
-  return <div className={theme === "dark" ? "dark" : ""}>{children}</div>;
+  useEffect(() => {
+    const root = document.documentElement;
+
+    if (theme === "dark") {
+      root.classList.add("dark");
+    } else {
+      root.classList.remove("dark");
+    }
+  }, [theme]);
+
+  return <>{children}</>;
 }
