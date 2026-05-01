@@ -10,7 +10,10 @@ const getDatabaseConfig = () => {
     database: connectionUrl.pathname.slice(1),
     user: decodeURIComponent(connectionUrl.username),
     password: decodeURIComponent(connectionUrl.password),
-    ssl: { rejectUnauthorized: false },
+    ssl:
+      process.env.NODE_ENV === "production"
+        ? { rejectUnauthorized: false }
+        : false,
   };
 };
 

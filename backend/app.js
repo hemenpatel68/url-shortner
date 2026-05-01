@@ -6,8 +6,7 @@ import urlRouter from "./routes/url.routes.js";
 import { authenticationMiddleware } from "./middleware/auth.middleware.js";
 
 const app = express();
-const corsOrigins = (process.env.CORS_ORIGIN ?? "http://localhost:3000")
-  .split(",")
+const corsOrigins = process.env.CORS_ORIGIN.split(",")
   .map((origin) => origin.trim())
   .filter(Boolean);
 
