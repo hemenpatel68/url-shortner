@@ -2,10 +2,11 @@
 
 import { EmptyState } from "@/components/EmptyState";
 import ThemeToggle from "@/components/ToggleButton";
-import { AuthMode, ShortUrl } from "@/types/type";
+import { ShortUrl } from "@/types/type";
 import { apiRequest, apiBase } from "@/utils/apiRequest";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 const getShortUrlBase = () => {
   const envBase = process.env.NEXT_PUBLIC_SHORT_URL_BASE;
@@ -38,10 +39,6 @@ const shortUrlBase = getShortUrlBase();
 console.log("Short URL Base:", shortUrlBase);
 
 export const Home = () => {
-  const [authMode, setAuthMode] = useState<AuthMode>("login");
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [token, setToken] = useState(() => {
     if (typeof window === "undefined") {
       return "";
@@ -58,8 +55,21 @@ export const Home = () => {
 
   const [isLoading, setIsLoading] = useState(false);
   const [copiedCode, setCopiedCode] = useState("");
+  const router = useRouter();
 
   const isAuthenticated = Boolean(token);
+
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (!isAuthenticated) {
+      router.push("/login");
+    }
+  }, [isAuthenticated, router]);
+
+  // Don't render anything if not authenticated (will redirect)
+  if (!isAuthenticated) {
+    return null;
+  }
 
   const sortedUrls = useMemo(() => {
     return [...shortUrls].sort((a, b) => {
@@ -97,41 +107,6 @@ export const Home = () => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     loadShortUrls(token);
   }, [loadShortUrls, token]);
-
-  const handleAuth = async (event: any) => {
-    event.preventDefault();
-    setIsLoading(true);
-
-    try {
-      if (authMode === "signup") {
-        await apiRequest("/users/signup", {
-          method: "POST",
-          body: JSON.stringify({ name, email, password }),
-        });
-        setAuthMode("login");
-        toast.success("Account created. Log in to start shortening links.");
-        setPassword("");
-        return;
-      }
-
-      const data = await apiRequest<{ access_token: string; message: string }>(
-        "/users/login",
-        {
-          method: "POST",
-          body: JSON.stringify({ email, password }),
-        },
-      );
-
-      window.localStorage.setItem("url-shortner-token", data.access_token);
-      setToken(data.access_token);
-      setPassword("");
-      toast.success("You are logged in.");
-    } catch (requestError) {
-      toast.error((requestError as Error).message);
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const handleCreate = async (event: any) => {
     event.preventDefault();
@@ -262,96 +237,15 @@ export const Home = () => {
 
       <section className="mx-auto grid w-full max-w-6xl gap-5 px-5 py-6 lg:grid-cols-[360px_1fr]">
         <aside className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-          {!isAuthenticated ? (
-            <>
-              <div className="mb-5 flex rounded-md bg-slate-100 p-1 dark:bg-slate-800">
-                {(["login", "signup"] as const).map((mode) => (
-                  <button
-                    className={`h-10 flex-1 rounded-md text-sm font-semibold transition ${
-                      authMode === mode
-                        ? "bg-white text-slate-950 shadow-sm dark:bg-slate-950 dark:text-white"
-                        : "text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-100"
-                    }`}
-                    key={mode}
-                    onClick={() => {
-                      setAuthMode(mode);
-                    }}
-                    type="button"
-                  >
-                    {mode === "login" ? "Login" : "Sign up"}
-                  </button>
-                ))}
-              </div>
-
-              <form className="space-y-4" onSubmit={handleAuth}>
-                {authMode === "signup" ? (
-                  <label className="block">
-                    <span className="text-sm font-medium text-slate-700 dark:text-slate-200">
-                      Name
-                    </span>
-                    <input
-                      className="mt-2 h-11 w-full rounded-md border border-slate-300 bg-white px-3 text-sm outline-none transition focus:border-cyan-600 focus:ring-4 focus:ring-cyan-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-50 dark:placeholder:text-slate-500 dark:focus:border-cyan-400 dark:focus:ring-cyan-950"
-                      minLength={3}
-                      onChange={(event) => setName(event.target.value)}
-                      placeholder="Hemen Patel"
-                      required
-                      value={name}
-                    />
-                  </label>
-                ) : null}
-
-                <label className="block">
-                  <span className="text-sm font-medium text-slate-700 dark:text-slate-200">
-                    Email
-                  </span>
-                  <input
-                    className="mt-2 h-11 w-full rounded-md border border-slate-300 bg-white px-3 text-sm outline-none transition focus:border-cyan-600 focus:ring-4 focus:ring-cyan-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-50 dark:placeholder:text-slate-500 dark:focus:border-cyan-400 dark:focus:ring-cyan-950"
-                    onChange={(event) => setEmail(event.target.value)}
-                    placeholder="you@example.com"
-                    required
-                    type="email"
-                    value={email}
-                  />
-                </label>
-
-                <label className="block">
-                  <span className="text-sm font-medium text-slate-700 dark:text-slate-200">
-                    Password
-                  </span>
-                  <input
-                    className="mt-2 h-11 w-full rounded-md border border-slate-300 bg-white px-3 text-sm outline-none transition focus:border-cyan-600 focus:ring-4 focus:ring-cyan-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-50 dark:placeholder:text-slate-500 dark:focus:border-cyan-400 dark:focus:ring-cyan-950"
-                    minLength={3}
-                    onChange={(event) => setPassword(event.target.value)}
-                    placeholder="Minimum 3 characters"
-                    required
-                    type="password"
-                    value={password}
-                  />
-                </label>
-
-                <button
-                  className="h-11 w-full rounded-md bg-cyan-700 px-4 text-sm font-semibold text-white transition hover:bg-cyan-800 disabled:cursor-not-allowed disabled:bg-slate-300"
-                  disabled={isLoading}
-                  type="submit"
-                >
-                  {isLoading
-                    ? "Please wait"
-                    : authMode === "login"
-                      ? "Login"
-                      : "Create account"}
-                </button>
-              </form>
-            </>
-          ) : (
-            <form className="space-y-4" onSubmit={handleCreate}>
-              <div>
-                <h2 className="text-lg font-bold text-slate-950 dark:text-white">
-                  Shorten a link
-                </h2>
-                <p className="mt-1 text-sm leading-6 text-slate-500 dark:text-slate-400">
-                  Paste a full URL and optionally choose your own short code.
-                </p>
-              </div>
+          <form className="space-y-4" onSubmit={handleCreate}>
+            <div>
+              <h2 className="text-lg font-bold text-slate-950 dark:text-white">
+                Shorten a link
+              </h2>
+              <p className="mt-1 text-sm leading-6 text-slate-500 dark:text-slate-400">
+                Paste a full URL and optionally choose your own short code.
+              </p>
+            </div>
 
               <label className="block">
                 <span className="text-sm font-medium text-slate-700 dark:text-slate-200">
@@ -416,9 +310,7 @@ export const Home = () => {
           </div>
 
           <div className="divide-y divide-slate-200 dark:divide-slate-800">
-            {!isAuthenticated ? (
-              <EmptyState title="No session yet" />
-            ) : sortedUrls.length === 0 ? (
+            {sortedUrls.length === 0 ? (
               <EmptyState title="No short links yet" />
             ) : (
               sortedUrls.map((url) => {

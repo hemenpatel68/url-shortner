@@ -1,3 +1,4 @@
+import { apiFetch } from "@/lib/api";
 import { ApiError } from "@/types/type";
 
 export const apiBase = process.env.NEXT_PUBLIC_API_BASE;
@@ -14,7 +15,7 @@ export const apiRequest = async <T>(
     headers.set("Authorization", `Bearer ${token}`);
   }
 
-  const response = await fetch(`${apiBase}${path}`, {
+  const response = await apiFetch(`${apiBase}${path}`, {
     ...options,
     headers,
   });
