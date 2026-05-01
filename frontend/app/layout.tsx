@@ -4,6 +4,7 @@ import "./globals.css";
 import { Toaster } from "sonner";
 import { Providers } from "./provider";
 import ThemeWrapper from "@/components/ThemeWrapper";
+import { Analytics } from "@vercel/analytics/next";
 
 const dmSans = DM_Sans({
   variable: "--font-dm-sans",
@@ -47,6 +48,7 @@ export default function RootLayout({
           <ThemeWrapper>{children}</ThemeWrapper>
         </Providers>
         <Toaster richColors position="top-right" />
+        <Analytics />
       </body>
     </html>
   );
