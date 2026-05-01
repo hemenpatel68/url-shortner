@@ -247,48 +247,49 @@ export const Home = () => {
               </p>
             </div>
 
-              <label className="block">
-                <span className="text-sm font-medium text-slate-700 dark:text-slate-200">
-                  Destination URL
-                </span>
-                <input
-                  className="mt-2 h-11 w-full rounded-md border border-slate-300 bg-white px-3 text-sm outline-none transition focus:border-cyan-600 focus:ring-4 focus:ring-cyan-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-50 dark:placeholder:text-slate-500 dark:focus:border-cyan-400 dark:focus:ring-cyan-950"
-                  onChange={(event) => setTargetUrl(event.target.value)}
-                  placeholder="https://example.com/article"
-                  required
-                  type="url"
-                  value={targetUrl}
-                />
-              </label>
+            <label className="block">
+              <span className="text-sm font-medium text-slate-700 dark:text-slate-200">
+                Destination URL
+              </span>
+              <input
+                className="mt-2 h-11 w-full rounded-md border border-slate-300 bg-white px-3 text-sm outline-none transition focus:border-cyan-600 focus:ring-4 focus:ring-cyan-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-50 dark:placeholder:text-slate-500 dark:focus:border-cyan-400 dark:focus:ring-cyan-950"
+                onChange={(event) => setTargetUrl(event.target.value)}
+                placeholder="https://example.com/article"
+                required
+                type="url"
+                value={targetUrl}
+              />
+            </label>
 
-              <label className="block">
-                <span className="text-sm font-medium text-slate-700 dark:text-slate-200">
-                  Custom code
-                </span>
-                <input
-                  className="mt-2 h-11 w-full rounded-md border border-slate-300 bg-white px-3 text-sm outline-none transition focus:border-cyan-600 focus:ring-4 focus:ring-cyan-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-50 dark:placeholder:text-slate-500 dark:focus:border-cyan-400 dark:focus:ring-cyan-950"
-                  maxLength={155}
-                  onChange={(event) => setCustomCode(event.target.value)}
-                  placeholder="launch"
-                  value={customCode}
-                />
-              </label>
+            <label className="block">
+              <span className="text-sm font-medium text-slate-700 dark:text-slate-200">
+                Custom code
+              </span>
+              <input
+                className="mt-2 h-11 w-full rounded-md border border-slate-300 bg-white px-3 text-sm outline-none transition focus:border-cyan-600 focus:ring-4 focus:ring-cyan-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-50 dark:placeholder:text-slate-500 dark:focus:border-cyan-400 dark:focus:ring-cyan-950"
+                maxLength={155}
+                onChange={(event) => setCustomCode(event.target.value)}
+                placeholder="launch"
+                value={customCode}
+              />
+            </label>
 
-              <button
-                className="h-11 w-full rounded-md bg-cyan-700 px-4 text-sm font-semibold text-white transition hover:bg-cyan-800 disabled:cursor-not-allowed disabled:bg-slate-300"
-                disabled={isLoading}
-                type="submit"
-              >
-                {isLoading ? "Creating" : "Create short link"}
-              </button>
-            </form>
-          )}
+            <button
+              className="h-11 w-full rounded-md bg-cyan-700 px-4 text-sm font-semibold text-white transition hover:bg-cyan-800 disabled:cursor-not-allowed disabled:bg-slate-300"
+              disabled={isLoading}
+              type="submit"
+            >
+              {isLoading ? "Creating" : "Create short link"}
+            </button>
+          </form>
         </aside>
 
         <section className="rounded-lg border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
           <div className="flex flex-col gap-3 border-b border-slate-200 p-5 dark:border-slate-800 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <h2 className="text-xl font-bold text-slate-950 dark:text-white">Your links</h2>
+              <h2 className="text-xl font-bold text-slate-950 dark:text-white">
+                Your links
+              </h2>
               <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
                 {isAuthenticated
                   ? `${shortUrls.length} saved short link${
